@@ -25,6 +25,9 @@ def playlistStats():
                      attachment_filename='Stats.pdf',
                      as_attachment=True)
 
+@app.errorhandler(Exception)
+def not_found(e):
+  return render_template("404.html")
 
 if __name__ == "__main__":
     app.run(debug= True)
