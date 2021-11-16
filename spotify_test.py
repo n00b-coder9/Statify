@@ -1,4 +1,3 @@
-import json
 import spotipy
 import pandas as pd
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -6,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 from math import pi
 from credentials import client_id, client_secret
+
 min_max_scaler = MinMaxScaler()
 
 client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
@@ -13,8 +13,8 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # playlist_id = "spotify:playlist:3lRvb9RIb0MyUTU4O0IZAv"
 def playlist_stats(playlist_url):
-    temp = playlist_url.split('/')[::-1]
-    playlist_id = "spotify:"+temp[1]+":"+temp[0].split('?')[0]
+    temp = playlist_url.split("/")[::-1]
+    playlist_id = "spotify:" + temp[1] + ":" + temp[0].split("?")[0]
     results = sp.playlist(playlist_id)
 
     # create a list of song ids
@@ -95,30 +95,30 @@ def playlist_stats(playlist_url):
 
     music_feature.loc[:] = min_max_scaler.fit_transform(music_feature.loc[:])
 
-    #plot size
-    fig=plt.figure(figsize=(12,8))
+    # plot size
+    fig = plt.figure(figsize=(12, 8))
 
     # convert column names into a list
-    categories=list(music_feature.columns)
+    categories = list(music_feature.columns)
     # number of categories
-    N=len(categories)
+    N = len(categories)
 
     # create a list with the average of all features
-    value=list(music_feature.mean())
+    value = list(music_feature.mean())
 
     # repeat first value to close the circle
     # the plot is a circle, so we need to "complete the loop"
     # and append the start value to the end.
-    value+=value[:1]
+    value += value[:1]
     # calculate angle for each category
-    angles=[n/float(N)*2*pi for n in range(N)]
-    angles+=angles[:1]
+    angles = [n / float(N) * 2 * pi for n in range(N)]
+    angles += angles[:1]
 
     # plot
     plt.polar(angles, value)
-    plt.fill(angles,value,alpha=0.3)
+    plt.fill(angles, value, alpha=0.3)
 
-
-    plt.xticks(angles[:-1],categories, size=15)
-    plt.yticks(color='grey',size=15)
-    plt.show()
+    plt.xticks(angles[:-1], categories, size=15)
+    plt.yticks(color="grey", size=15)
+    # plt.plot()
+    plt.savefig("templates/images/new_plot.pdf")
